@@ -6,6 +6,7 @@ import cors from "cors";
 import connectDb from "./config/db.js";
 
 import authRoutes from "./route/authRoutes.js";
+import productRoutes from "./route/productRoutes.js";
 
 dotenv.config(); //using it for loading env var from .env file in process.env
 
