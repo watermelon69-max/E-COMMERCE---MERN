@@ -6,7 +6,7 @@ import upload from "../config/multer.js";
 import {
   getProducts,
   getProductById,
-  createProduct,
+  createProduct, 
   updateProduct,
   deleteProduct
 } from "../controllers/productController.js";

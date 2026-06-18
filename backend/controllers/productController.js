@@ -28,16 +28,20 @@ const createProduct = async (req, res) => {
       const result = await cloudinary.uploader.upload(req.file.path);
       imageUrl = result.secure_url;
     }
+    console.log(req.body);
+    console.log(req.file);
     const savedProduct = await Product.create({
       name,
       description,
       price,
       stock,
       imageUrl,
+      category,
     });
     res.status(201).json(savedProduct);
   } catch (error) {
     res.status(500).json({ message: "Internal Server error" });
+    console.error(error);
   }
 };
 
@@ -81,4 +85,4 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-export default {getProducts, getProductById, createProduct, updateProduct, deleteProduct};
+export  {getProducts, getProductById, createProduct, updateProduct, deleteProduct};
