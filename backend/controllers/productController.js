@@ -16,6 +16,10 @@ const getProductById = async (req, res) => {
     if (product) res.json(product);
     else res.status(404).json({ message: "Product not found" });
   } catch (error) {
+    console.log(error);
+    if (error.name === "CastError") {
+      return res.status(400).json({ message: "Invalid product ID format" });
+    }
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -28,8 +32,7 @@ const createProduct = async (req, res) => {
       const result = await cloudinary.uploader.upload(req.file.path);
       imageUrl = result.secure_url;
     }
-    console.log(req.body);
-    console.log(req.file);
+
     const savedProduct = await Product.create({
       name,
       description,
@@ -41,7 +44,7 @@ const createProduct = async (req, res) => {
     res.status(201).json(savedProduct);
   } catch (error) {
     res.status(500).json({ message: "Internal Server error" });
-    console.error(error);
+    // console.error(error);
   }
 };
 
@@ -85,4 +88,10 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-export  {getProducts, getProductById, createProduct, updateProduct, deleteProduct};
+export {
+  getProducts,
+  getProductById,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+};

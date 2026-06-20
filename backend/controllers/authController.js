@@ -24,15 +24,17 @@ const registerUser = async (req, res) => {
     });
 
     if (user) {
-      //generating otp
       const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-      //writing message that i will send in mail to the new user
-      const message = `Welcome to ShopNest , ${name} ! Your OTP for ShopNest registeration is ${otp}`;
+      user.otp = otp;
+      user.otpExpires = new Date(Date.now() + 10 * 60 * 1000);
+      await user.save();
+
+      const message = `Welcome to ShopNest, ${name}! Your OTP for ShopNest registration is ${otp}`;
 
       await sendEmail(
         email,
-        "Welcome to ShopNest - Your OTP for registeration",
+        "Welcome to ShopNest - Your OTP for registration",
         message,
       );
 
@@ -81,4 +83,39 @@ const getUsers = async (req, res) => {
   }
 };
 
-export { registerUser, loginUser, getUsers };
+const verifyEmail = async (req, res) => {
+  const { otp } = req.body;
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    if (user.verified) {
+      return res.status(400).json({ message: "Email already verified" });
+    }
+    if (!user.otp || !user.otpExpires) {
+      return res
+        .status(400)
+        .json({ message: "No OTP found. Request a new one" });
+    }
+    if (user.otp !== otp) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+    if (new Date() > user.otpExpires) {
+      return res
+        .status(400)
+        .json({ message: "OTP expired. Request a new one" });
+    }
+
+    user.verified = true;
+    user.otp = undefined;
+    user.otpExpires = undefined;
+    await user.save();
+
+    res.json({ message: "Email verified successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error in verifyEmail controller" });
+  }
+};
+
+export { registerUser, loginUser, getUsers, verifyEmail };

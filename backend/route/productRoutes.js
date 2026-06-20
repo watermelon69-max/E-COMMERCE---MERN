@@ -6,14 +6,17 @@ import upload from "../config/multer.js";
 import {
   getProducts,
   getProductById,
-  createProduct, 
+  createProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
 } from "../controllers/productController.js";
 
 const router = express.Router();
 //all products
-router.route("/").get(getProducts).post(protect, admin, upload.single("image"), createProduct);
+router
+  .route("/")
+  .get(getProducts)
+  .post(protect, admin, upload.single("image"), createProduct);
 //specific product
 router
   .route("/:id")
