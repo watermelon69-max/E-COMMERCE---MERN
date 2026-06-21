@@ -17,11 +17,11 @@ const createOrder = async (req, res) => {
 
       await order.save();
       //for sending order cofirmation email to user
-      await sendEmail({
-        to: req.user.email,
-        subject: "Order Confirmation",
-        text: `Your order with ID ${order._id} has been successfully placed. Total Amount: ${totalAmount}. Thank you for shopping with us!`,
-      });
+      await sendEmail(
+        "anuragmourya901@gmail.com",
+        "Order Confirmation",
+        `Your order with ID ${order._id} has been successfully placed. Total Amount: ${totalAmount}. Thank you for shopping with us!`
+      );
       res.status(201).json({ message: "Order created successfully", order });
     }
   } catch (error) {
@@ -51,6 +51,21 @@ const getOrders = async (req, res) => {
   }
 };
 
-const updateOrder = async(req,res)=>{
+const updateOrderStatus = async (req, res) => {
+  try {
+    const { status } = req.body;
+    const order = await Order.findById(req.params.id);
 
-}
+    if (order) {
+      order.status = status;
+      await order.save();
+      res.json({ message: "Order status updated successfully", order });
+    } else {
+      res.status(404).json({ message: "Order not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Error updating order status", error });
+  }
+};
+
+export { createOrder, myOrders, getOrders, updateOrderStatus };
