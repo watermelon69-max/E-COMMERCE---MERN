@@ -38,13 +38,13 @@ const myOrders = async (req, res) => {
     );
     res.json(orders);
   } catch (error) {
-    res.staus(500).json({ message: "Error fetchinh orders" });
+    res.staus(500).json({ message: "Error fetching orders" });
   }
 };
 
 const getOrders = async (req, res) => {
   try {
-    const orders = await Order.find({}).populate("userId", "name email");
+    const orders = await Order.find({}).populate("user", "name email");
     res.json(orders);
   } catch (error) {
     res.status(500).json({ message: "Error fetching orders", error });
