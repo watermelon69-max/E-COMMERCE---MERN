@@ -9,6 +9,7 @@ import authRoutes from "./route/authRoutes.js";
 import productRoutes from "./route/productRoutes.js";
 import orderRoutes from "./route/orderRoutes.js";
 import paymentRoutes from "./route/paymentRoutes.js";
+import analyticsRoutes from "./route/analyticsRoutes.js";
 
 dotenv.config(); //using it for loading env var from .env file in process.env
 
@@ -26,7 +27,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/payments", paymentRoutes);
-//app.use("/api/analytics", analyticsRoutes);
+app.use("/api/analytics", analyticsRoutes);
 
 const PORT = process.env.PORT || 5000;
 
